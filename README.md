@@ -72,15 +72,25 @@ Each sample yields:
 
 ## How to Run
 
+### Setup
+
 ```bash
-# (Optional) activate virtual environment
-source "pytorch/Scripts/activate"  # Git Bash on Windows
+# 1) Create and activate a virtual environment (Windows Git Bash)
+python -m venv .venv
+source .venv/Scripts/activate
 
-# Install dependencies if missing
-python -m pip install torch torchvision matplotlib numpy
+# 2) Install PyTorch following the official guide (choose your OS/CUDA)
+#    https://pytorch.org/get-started/locally/
+#    (Make sure to include torchvision in the selected command.)
 
-# Launch training
-cd TP2
+# 3) Install other dependencies
+python -m pip install numpy matplotlib pillow
+
+# 4) Get the CIFAR-10-images dataset structure inside CIFAR-10-images-classifier
+cd CIFAR-10-images-classifier
+git clone git@github.com:YoongiKim/CIFAR-10-images.git
+
+# 5) Run the program
 python main.py
 ```
 
