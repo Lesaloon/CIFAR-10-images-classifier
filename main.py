@@ -11,8 +11,16 @@ from torch.amp.autocast_mode import autocast  # unified AMP autocast
 
 
 def train(
-    model, data, optimizer, criterion, device, epochs, scheduler=None, amp=True, date=""
-):
+    model: Model,
+    data: DataLoader,
+    optimizer: torch.optim.Optimizer,
+    criterion: torch.nn.Module,
+    device: torch.device,
+    epochs: int,
+    scheduler: torch.optim.lr_scheduler.LRScheduler | None = None,
+    amp: bool = True,
+    date: str = "",
+) -> None:
     model.to(device)
     # Use new torch.amp GradScaler API (pass device string) to avoid deprecation warnings
     scaler = GradScaler("cuda", enabled=amp and device.type == "cuda")
@@ -49,11 +57,11 @@ def train(
         )
 
 
-def save_model(model, path):
+def save_model(model: Model, path: str) -> None:
     torch.save(model.state_dict(), path)
 
 
-def compute_accuracy(pred, labels):
+def compute_accuracy(pred: torch.Tensor, labels: torch.Tensor) -> float:
     pred_np = pred.cpu().detach().numpy()
     labels_np = labels.cpu().detach().numpy()
     score = 0.0
@@ -107,9 +115,7 @@ if __name__ == "__main__":
     criterion = torch.nn.CrossEntropyLoss(label_smoothing=0.1)
     epochs = 500
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-        optimizer,
-        T_max=epochs,  # number of epochs
-        eta_min=1e-5,  # minimum LR (never reach 0)
+        optimizer, T_max=epochs, eta_min=1e-5
     )
     date = datetime.now().strftime("%Y%m%d_%H%M%S")
     train(
@@ -119,7 +125,7 @@ if __name__ == "__main__":
         criterion,
         device,
         epochs,
-        scheduler=scheduler,
+        scheduler,
         amp=True,
         date=date,
     )
