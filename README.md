@@ -12,27 +12,32 @@ Convolutional neural network implemented in PyTorch to classify CIFAR‑10 image
 ## Current Architecture (Model.py)
 
 Feature extractor (three `ConvBlock`s):
+
 - Each `ConvBlock`: `Conv2d(3×3, stride=1, pad=1)` → `BatchNorm2d` → `ReLU` → `MaxPool2d(2)`
 - Channel progression: `3 → 32 → 64 → 128`
 - Spatial progression: `32×32 → 16×16 → 8×8 → 4×4`
 
 Attention & pooling:
+
 - `SEBlock(128, reduction=16)`: Channel-wise squeeze & excitation (global avg pool → bottleneck FC → gating) adds ~2K params, improves channel discrimination.
 - `AdaptiveAvgPool2d(1)`: Replaces large dense layers by producing a single global descriptor per channel (`128` features).
 
 Classification head:
+
 - `Linear(128 → 10)` for final logits.
 
 Removed components from earlier version:
+
 - Previous dense head (`2048 → 256 → 128`) with Dropout has been eliminated (it dominated parameter count and risked overfitting).
 
 ### Parameter Summary (approx.)
-| Component | Params |
-|-----------|-------:|
-| 3 Conv2d + BN blocks | ~93.7K |
-| SEBlock | ~2.2K |
-| Linear head | ~1.3K |
-| **Total** | **~97K** |
+
+| Component            |   Params |
+| -------------------- | -------: |
+| 3 Conv2d + BN blocks |   ~93.7K |
+| SEBlock              |    ~2.2K |
+| Linear head          |    ~1.3K |
+| **Total**            | **~97K** |
 
 Previous version was >650K parameters (dense layers ~557K); new design is >6× smaller.
 
@@ -49,10 +54,12 @@ Previous version was >650K parameters (dense layers ~557K); new design is >6× s
 ## Data Pipeline
 
 `CIFARDataset.py` loads files from:
+
 - `CIFAR-10-images/train`
 - `CIFAR-10-images/test`
 
 Each sample yields:
+
 - Image tensor: `3 × 32 × 32`
 - One‑hot encoded label (training loop converts with `argmax` for loss calculation)
 
