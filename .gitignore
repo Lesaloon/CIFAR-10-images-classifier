@@ -1,5 +1,5 @@
+!.gitkeep
 *.pth
 CIFAR-10-images
 __pycache__
-model/*
 *.pdf
