@@ -3,8 +3,9 @@ import torch.nn as nn
 
 
 class ConvBlock(nn.Module):
-    def __init__(self, in_channels, out_channels):
+    def __init__(self, in_channels, out_channels, Pooling=True):
         super(ConvBlock, self).__init__()
+        self.Pooling = Pooling
         # 3 channels for RGB images
         self.conv = nn.Conv2d(
             in_channels=in_channels,
@@ -21,5 +22,6 @@ class ConvBlock(nn.Module):
         x = self.conv(x)
         x = self.batchnorm(x)
         x = self.relu(x)
-        x = self.pool(x)
+        if self.Pooling:
+            x = self.pool(x)
         return x
